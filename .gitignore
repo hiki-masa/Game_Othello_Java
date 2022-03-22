@@ -1,0 +1,6 @@
+*.pptx
+
+.classpath
+.project
+.settings/
+bin/
