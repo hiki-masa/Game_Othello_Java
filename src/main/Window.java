@@ -56,8 +56,6 @@ class Canvas extends JPanel {
 				case WHITE:
 					g.drawImage(WhiteImg, Osero.MassSize * x, Osero.MassSize * y, Osero.MassSize, Osero.MassSize, this);
 					break;
-				default:
-					break;
 				}
 			}
 		}
