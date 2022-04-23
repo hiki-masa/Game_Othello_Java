@@ -24,7 +24,7 @@ public class Osero implements MouseListener, Cloneable{
 	
 	static  final int GRID_SIZE  = 100;
 	static  final int BOARD_SIZE = 8;
-	private final ArrayList<ArrayList<Stone>> board = new ArrayList<ArrayList<Stone>>();
+	private ArrayList<ArrayList<Stone>> board = new ArrayList<ArrayList<Stone>>();
 	private final Canvas canv = new Canvas();
 	private final Window FRAME;
 	private Human player = new Human(Stone.BLACK);
@@ -47,8 +47,8 @@ public class Osero implements MouseListener, Cloneable{
 		board.get(3).set(4, Stone.WHITE);
 		board.get(4).set(3, Stone.WHITE);
 		
-		canv.setBoard(this.clone().board);
 		FRAME.add(canv);
+		dispBoard();
 		FRAME.setVisible(true);
 		
 		// マウスイベントの有効化
@@ -57,19 +57,17 @@ public class Osero implements MouseListener, Cloneable{
 	
 	/* 指定箇所に指定色の石が置けるか判断 */
 	public boolean canPut(int _x, int _y, Stone _color) {
-		// 設置前の石の数を記録
-		int count = this.countStone(_color);
 		Osero copyOsero = this.clone();
 		copyOsero.putStone(_x, _y, _color);
 		// 設置前と設置後で，数の変化があるなら置けると判定，変化が無いなら置けないと判定
-		if (copyOsero.countStone(_color) != count) {
+		if (copyOsero.countStone(_color) != this.countStone(_color)) {
 			return true;
 		}else {
 			return false;
 		}
 	}
 	
-	// 指定箇所に石を設置
+	/* 指定箇所に石を設置 */
 	public void putStone(int _x, int _y, Stone _color) {
 		// 範囲内を選択しているか判定
 		if (0 <= _x && _x < BOARD_SIZE && 0 <= _y && _y < BOARD_SIZE) {
@@ -115,6 +113,7 @@ public class Osero implements MouseListener, Cloneable{
 		dispBoard();
 	}
 	
+	/* Canvasを用いたGUI表示 */
 	public void dispBoard() {
 		canv.setBoard(this.clone().board);
 		FRAME.repaint();
@@ -133,7 +132,7 @@ public class Osero implements MouseListener, Cloneable{
 		return count;
 	}
 	
-	// マウスクリックに関する関数
+	/* マウスクリックに関する関数 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// マウスでクリックした場所に石が置ける場合
@@ -159,6 +158,14 @@ public class Osero implements MouseListener, Cloneable{
 		Osero copy = null;
 		try {
 			copy = (Osero) super.clone();
+			/* board はディープコピー，その他の変数はシャローコピー */
+			copy.board = new ArrayList<ArrayList<Stone>>();
+			for (int y = 0; y < BOARD_SIZE; y++) {
+				copy.board.add(new ArrayList<>());
+				for (int x = 0; x < BOARD_SIZE; x++) {
+					copy.board.get(y).add(this.board.get(y).get(x));
+				}
+			}
 		}catch(Exception e) {
 			;
 		}
