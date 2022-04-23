@@ -14,10 +14,10 @@ import main.Osero.Stone;
 
 public class Window extends JFrame{
 	/* コンストラクタ */
-	public Window(String _WindowName, int _Width, int _Height) {
+	public Window(String _windowName, int _width, int _height) {
 		// Windowの設定
-		setTitle(_WindowName);
-		setSize(_Width, _Height);
+		setTitle(_windowName);
+		setSize(_width, _height);
 		setResizable(true);
 		
 		// Windowの閉じるボタンを押せば，プログラムが終了する
@@ -30,31 +30,35 @@ public class Window extends JFrame{
 }
 
 class Canvas extends JPanel {
-	private Image EmptyImg = Toolkit.getDefaultToolkit().getImage("src/EMPTY.png");
-	private Image BlackImg = Toolkit.getDefaultToolkit().getImage("src/BLACK.png");
-	private Image WhiteImg = Toolkit.getDefaultToolkit().getImage("src/WHITE.png");
-
-	private final ArrayList<ArrayList<Stone>> Field;
+	private Image EMPTY_IMG = Toolkit.getDefaultToolkit().getImage("src/EMPTY.png");
+	private Image BLACK_IMG = Toolkit.getDefaultToolkit().getImage("src/BLACK.png");
+	private Image WHITE_IMG = Toolkit.getDefaultToolkit().getImage("src/WHITE.png");
+	private ArrayList<ArrayList<Stone>> board;
 	
 	// コンストラクタ
-	public Canvas(ArrayList<ArrayList<Stone>> _Field) {
-		Field = _Field;
+	public Canvas() {
+		;
+	}
+	
+	// セッター
+	public void setBoard(ArrayList<ArrayList<Stone>> _board) {
+		board = _board;
 	}
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
-		for (int y = 0; y < Osero.FieldSize; y++) {
-			for (int x = 0; x < Osero.FieldSize; x++) {
-				switch (Field.get(y).get(x)) {
+		for (int y = 0; y < Osero.BOARD_SIZE; y++) {
+			for (int x = 0; x < Osero.BOARD_SIZE; x++) {
+				switch (board.get(y).get(x)) {
 				case EMPTY:
-					g.drawImage(EmptyImg, Osero.MassSize * x, Osero.MassSize * y, Osero.MassSize, Osero.MassSize, this);
+					g.drawImage(EMPTY_IMG, Osero.GRID_SIZE * x, Osero.GRID_SIZE * y, Osero.GRID_SIZE, Osero.GRID_SIZE, this);
 					break;
 				case BLACK:
-					g.drawImage(BlackImg, Osero.MassSize * x, Osero.MassSize * y, Osero.MassSize, Osero.MassSize, this);
+					g.drawImage(BLACK_IMG, Osero.GRID_SIZE * x, Osero.GRID_SIZE * y, Osero.GRID_SIZE, Osero.GRID_SIZE, this);
 					break;
 				case WHITE:
-					g.drawImage(WhiteImg, Osero.MassSize * x, Osero.MassSize * y, Osero.MassSize, Osero.MassSize, this);
+					g.drawImage(WHITE_IMG, Osero.GRID_SIZE * x, Osero.GRID_SIZE * y, Osero.GRID_SIZE, Osero.GRID_SIZE, this);
 					break;
 				}
 			}
