@@ -23,12 +23,12 @@ interface OseroStone{
 	}
 }
 
-/* オセロ盤面のクラス（インタフェースにするかどうか検討） */
+/* オセロクラス（インタフェースにするかどうか検討） */
 class Osero implements OseroStone{
-	private static final int BOARD_SIZE = 8;
-	private static final ArrayList<ArrayList<Stone>> board = new ArrayList<ArrayList<Stone>>();
+	protected static final int BOARD_SIZE = 8;
+	private   static final ArrayList<ArrayList<Stone>> board = new ArrayList<ArrayList<Stone>>();
 	// ポリモフィズムを用いたプレイヤー配列の作成
-	protected Player[] players = { new Human(Stone.BLACK), new Computer(Stone.WHITE) };
+	protected Player[] players = { new Computer(Stone.BLACK), new Computer(Stone.WHITE) };
 	
 	/* コンストラクタ */
 	public Osero() {
@@ -46,9 +46,31 @@ class Osero implements OseroStone{
 		board.get(4).set(3, Stone.WHITE);
 	}
 	
-	/* Canvasを用いたCUI表示 */
-	public static int getBOARD_SIZE() {
-		return BOARD_SIZE;
+	/* ゲームループ */
+	public void game() {
+		while(countStone(players[0].color) + countStone(players[1].color) != BOARD_SIZE * BOARD_SIZE) {
+			players[0].play();
+			dispBoard();
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {}
+			
+			players[1].play();
+			dispBoard();
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {}
+		}
+		result();
+	}
+	
+	/* 結果表示 */
+	private void result() {
+		System.out.print(players[0].color);
+		System.out.println("：" + countStone(players[0].color));
+		
+		System.out.print(players[1].color);
+		System.out.println("：" + countStone(players[1].color));
 	}
 	
 	/* 指定箇所に指定色の石が置けるか判断 */
@@ -112,14 +134,18 @@ class Osero implements OseroStone{
 				}
 			}
 		}
+		// 範囲外を選択している際の処理
+		else {
+			System.out.println("範囲外のマス座標を指定しないでください．");
+		}
 	}
 	
 	/* 盤面上にある指定した色の石の数を返す */
 	public static int countStone(Stone _color) {
 		int count = 0;
-		for (int y = 0; y < BOARD_SIZE; y++) {
-			for (int x = 0; x < BOARD_SIZE; x++) {
-				if (board.get(y).get(x) == _color) {
+		for (ArrayList<Stone> row : board) {
+			for (Stone stone : row) {
+				if (stone == _color) {
 					count++;
 				}
 			}
@@ -127,9 +153,26 @@ class Osero implements OseroStone{
 		return count;
 	}
 	
-	
+	/* Canvasを用いたCUI表示 */
 	public void dispBoard() {
-		;
+		for (ArrayList<Stone> rows: board) {
+			for (Stone s : rows) {
+				switch(s) {
+				case BLACK:
+					System.out.print("〇");
+					break;
+				case WHITE:
+					System.out.print("●");
+					break;
+				case EMPTY:
+					System.out.print("　");
+					break;
+				default:
+					;
+				}
+			}
+			System.out.println();
+		}
 	}
 	
 	/* コピー盤面を返す */
@@ -155,14 +198,14 @@ class Osero implements OseroStone{
 }
 
 public class OseroGUI extends Osero implements MouseListener{
-	static  final int GRID_SIZE  = 100;
+	static  final int GRID_SIZE = 100;
 	private final Canvas canv = new Canvas();
 	private final Window FRAME;
 	
 	/* コンストラクタ */
 	public OseroGUI() {
 		// ウィンドウクラスの作成
-		FRAME = new Window("Osero", GRID_SIZE * getBOARD_SIZE(), GRID_SIZE * getBOARD_SIZE());
+		FRAME = new Window("Osero", GRID_SIZE * BOARD_SIZE, GRID_SIZE * BOARD_SIZE);
 		
 		FRAME.add(canv);
 		dispBoard();
@@ -175,7 +218,7 @@ public class OseroGUI extends Osero implements MouseListener{
 	/* Canvasを用いたGUI表示 */
 	@Override
 	public void dispBoard() {
-		canv.setBoard(super.copy());
+		canv.setBoard(copy());
 		FRAME.repaint();
 	}
 	

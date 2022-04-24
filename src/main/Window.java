@@ -49,8 +49,8 @@ class Canvas extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
-		for (int y = 0; y < Osero.getBOARD_SIZE(); y++) {
-			for (int x = 0; x < OseroGUI.getBOARD_SIZE(); x++) {
+		for (int y = 0; y < Osero.BOARD_SIZE; y++) {
+			for (int x = 0; x < OseroGUI.BOARD_SIZE; x++) {
 				switch (board.get(y).get(x)) {
 				case EMPTY:
 					g.drawImage(EMPTY_IMG, OseroGUI.GRID_SIZE * x, OseroGUI.GRID_SIZE * y, OseroGUI.GRID_SIZE, OseroGUI.GRID_SIZE, this);
