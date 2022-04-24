@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import main.Osero.Stone;
+import main.OseroStone.Stone;
 
 public class Window extends JFrame{
 	/* コンストラクタ */
@@ -45,20 +45,21 @@ class Canvas extends JPanel {
 		board = _board;
 	}
 	
+	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
-		for (int y = 0; y < Osero.BOARD_SIZE; y++) {
-			for (int x = 0; x < Osero.BOARD_SIZE; x++) {
+		for (int y = 0; y < Osero.getBOARD_SIZE(); y++) {
+			for (int x = 0; x < OseroGUI.getBOARD_SIZE(); x++) {
 				switch (board.get(y).get(x)) {
 				case EMPTY:
-					g.drawImage(EMPTY_IMG, Osero.GRID_SIZE * x, Osero.GRID_SIZE * y, Osero.GRID_SIZE, Osero.GRID_SIZE, this);
+					g.drawImage(EMPTY_IMG, OseroGUI.GRID_SIZE * x, OseroGUI.GRID_SIZE * y, OseroGUI.GRID_SIZE, OseroGUI.GRID_SIZE, this);
 					break;
 				case BLACK:
-					g.drawImage(BLACK_IMG, Osero.GRID_SIZE * x, Osero.GRID_SIZE * y, Osero.GRID_SIZE, Osero.GRID_SIZE, this);
+					g.drawImage(BLACK_IMG, OseroGUI.GRID_SIZE * x, OseroGUI.GRID_SIZE * y, OseroGUI.GRID_SIZE, OseroGUI.GRID_SIZE, this);
 					break;
 				case WHITE:
-					g.drawImage(WHITE_IMG, Osero.GRID_SIZE * x, Osero.GRID_SIZE * y, Osero.GRID_SIZE, Osero.GRID_SIZE, this);
+					g.drawImage(WHITE_IMG, OseroGUI.GRID_SIZE * x, OseroGUI.GRID_SIZE * y, OseroGUI.GRID_SIZE, OseroGUI.GRID_SIZE, this);
 					break;
 				}
 			}
