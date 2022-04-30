@@ -1,0 +1,187 @@
+package main;
+
+import java.util.ArrayList;
+
+import main.OseroStone.Stone;
+
+/* オセロ石のインタフェース */
+final class OseroStone {
+	// 各マスでの状態
+	public static enum Stone {
+		EMPTY, BLACK, WHITE,
+	};
+
+	public static Stone reverseStone(final Stone _color) {
+		if (_color == Stone.BLACK)
+			return Stone.WHITE;
+		else if (_color == Stone.WHITE)
+			return Stone.BLACK;
+		else
+			return Stone.EMPTY;
+	}
+}
+
+public class Board implements Cloneable {
+	protected static final int BOARD_SIZE = 8;
+	private final ArrayList<ArrayList<Stone>> board = new ArrayList<ArrayList<Stone>>();
+
+	public Board() {
+		// リストの作成
+		for (int y = 0; y < BOARD_SIZE; y++) {
+			board.add(new ArrayList<>());
+			for (int x = 0; x < BOARD_SIZE; x++) {
+				board.get(y).add(Stone.EMPTY);
+			}
+		}
+		// 初期石の設定
+		board.get(3).set(3, Stone.BLACK);
+		board.get(4).set(4, Stone.BLACK);
+		board.get(3).set(4, Stone.WHITE);
+		board.get(4).set(3, Stone.WHITE);
+	}
+
+	/* 指定箇所に指定色の石が置けるか判断 */
+	public boolean canPut(int _x, int _y, Stone _color) {
+		// 指定箇所に石を設置
+		Board copy = this.clone();
+		copy.putStone(_x, _y, _color);
+
+		// 設置前と設置後で，数の変化があるなら置けると判定，変化が無いなら置けないと判定
+		if (copy.countStone(_color) != this.countStone(_color)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/* 指定箇所に石を設置 */
+	public void putStone(int _x, int _y, Stone _color) {
+		// 範囲内を選択しているか判定
+		if (0 <= _x && _x < BOARD_SIZE && 0 <= _y && _y < BOARD_SIZE) {
+			if (board.get(_y).get(_x) == Stone.EMPTY) {
+				// 全方向探索
+				for (int vy = -1; vy <= 1; vy++) {
+					for (int vx = -1; vx <= 1; vx++) {
+						// 確認方向がない場合，処理を飛ばす
+						if (vx == 0 && vy == 0) {
+							continue;
+						}
+
+						// 確認方向に相手の石がなければ，処理を飛ばす
+						if (0 <= _x + vx && _x + vx < BOARD_SIZE && 0 <= _y + vy && _y + vy < BOARD_SIZE) {
+							if (board.get(_y + vy).get(_x + vx) != OseroStone.reverseStone(_color)) {
+								continue;
+							}
+						}
+
+						for (int step = 2; step < BOARD_SIZE; step++) {
+							// 範囲内に制限
+							if (0 <= _x + vx * step && _x + vx * step < BOARD_SIZE && 0 <= _y + vy * step
+									&& _y + vy * step < BOARD_SIZE) {
+								// EMPTYマスが先に見つかった場合，置き換えることは出来ないので，処理を飛ばす
+								if (board.get(_y + vy * step).get(_x + vx * step) == Stone.EMPTY) {
+									break;
+								}
+								// 自分Colorの石が存在すれば，あいだの石を置き換える
+								if (board.get(_y + vy * step).get(_x + vx * step) == _color) {
+									board.get(_y).set(_x, _color);
+									for (int s = 0; s < step; s++) {
+										board.get(_y + vy * s).set(_x + vx * s, _color);
+									}
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		// 範囲外を選択している際の処理
+		else {
+			System.out.println("範囲外のマス座標を指定しないでください．");
+		}
+	}
+
+	/* 盤面上にある指定した色の石の数を返す */
+	public int countStone(Stone _color) {
+		int count = 0;
+		for (ArrayList<Stone> row : board) {
+			for (Stone stone : row) {
+				if (stone == _color) {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+
+	/* CUI表示 */
+	public void dispBoard() {
+		System.out.print("  ");
+		for (int i = 0; i < Board.BOARD_SIZE; i++) {
+			System.out.print(" " + i);
+		}
+		System.out.println();
+		for (int y = 0, x; y < Board.BOARD_SIZE; y++) {
+			System.out.print(" " + y);
+			for (x = 0; x < Board.BOARD_SIZE; x++) {
+				switch (board.get(y).get(x)) {
+				case BLACK:
+					System.out.print("〇");
+					break;
+				case WHITE:
+					System.out.print("●");
+					break;
+				case EMPTY:
+					System.out.print("　");
+					break;
+				default:
+					;
+				}
+			}
+			System.out.println();
+		}
+		System.out.println();
+	}
+
+	/* 現在の盤面を複製した Boardクラス を返す */
+	@Override
+	public Board clone() {
+		Board copy = new Board();
+		for (int y = 0; y < BOARD_SIZE; y++) {
+			for (int x = 0; x < BOARD_SIZE; x++) {
+				copy.board.get(y).set(x, this.board.get(y).get(x));
+			}
+		}
+		return copy;
+	}
+	
+	/* ゲッター */
+	public ArrayList<ArrayList<Stone>> getBoard() {
+		return this.clone().board;
+	}
+}
+
+class BoardGUI extends Board {
+	static final int GRID_SIZE = 100;
+	private final Canvas canv = new Canvas();
+	private final Window FRAME;
+
+	/* コンストラクタ */
+	public BoardGUI() {
+		super();
+		// ウィンドウクラスの作成
+		FRAME = new Window("Osero", GRID_SIZE * Board.BOARD_SIZE, GRID_SIZE * Board.BOARD_SIZE);
+
+		FRAME.add(canv);
+		dispBoard();
+		FRAME.setVisible(true);
+	}
+
+	/* Canvasを用いたGUI表示 */
+	@Override
+	public void dispBoard() {
+		canv.setBoard(this.clone());
+		FRAME.repaint();
+	}
+}
