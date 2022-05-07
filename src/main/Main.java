@@ -1,9 +1,9 @@
 package main;
 
-import main.OseroStone.Stone;
+import main.OthelloStone.Stone;
 
 public class Main {
 	public static void main(String[] args) {
-		new Osero(new Human(Stone.BLACK), new Computer(Stone.WHITE)).game();
+		new Othello(new Computer(Stone.BLACK), new Computer(Stone.WHITE)).game();
 	}
 }

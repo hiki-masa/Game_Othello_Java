@@ -2,15 +2,16 @@ package main;
 
 import java.util.ArrayList;
 
-import main.OseroStone.Stone;
-
-/* オセロ石のインタフェース */
-final class OseroStone {
-	// 各マスでの状態
+/*
+ * オセロ石のインタフェース
+ * */
+interface OthelloStone {
+	/* 各マスでの状態 */
 	public static enum Stone {
 		EMPTY, BLACK, WHITE,
 	};
 
+	/* 引数で渡された反対の色を返す */
 	public static Stone reverseStone(final Stone _color) {
 		if (_color == Stone.BLACK)
 			return Stone.WHITE;
@@ -21,11 +22,16 @@ final class OseroStone {
 	}
 }
 
-public class Board implements Cloneable {
+/*
+ * オセロボード
+ * */
+public class OthelloBoard implements OthelloStone, Cloneable {
+	/* メンバ変数 */
 	protected static final int BOARD_SIZE = 8;
 	private final ArrayList<ArrayList<Stone>> board = new ArrayList<ArrayList<Stone>>();
 
-	public Board() {
+	/* コンストラクタ */
+	public OthelloBoard() {
 		// リストの作成
 		for (int y = 0; y < BOARD_SIZE; y++) {
 			board.add(new ArrayList<>());
@@ -43,7 +49,7 @@ public class Board implements Cloneable {
 	/* 指定箇所に指定色の石が置けるか判断 */
 	public boolean canPut(int _x, int _y, Stone _color) {
 		// 指定箇所に石を設置
-		Board copy = this.clone();
+		OthelloBoard copy = this.clone();
 		copy.putStone(_x, _y, _color);
 
 		// 設置前と設置後で，数の変化があるなら置けると判定，変化が無いなら置けないと判定
@@ -69,7 +75,7 @@ public class Board implements Cloneable {
 
 						// 確認方向に相手の石がなければ，処理を飛ばす
 						if (0 <= _x + vx && _x + vx < BOARD_SIZE && 0 <= _y + vy && _y + vy < BOARD_SIZE) {
-							if (board.get(_y + vy).get(_x + vx) != OseroStone.reverseStone(_color)) {
+							if (board.get(_y + vy).get(_x + vx) != OthelloStone.reverseStone(_color)) {
 								continue;
 							}
 						}
@@ -118,13 +124,13 @@ public class Board implements Cloneable {
 	/* CUI表示 */
 	public void dispBoard() {
 		System.out.print("  ");
-		for (int i = 0; i < Board.BOARD_SIZE; i++) {
+		for (int i = 0; i < OthelloBoard.BOARD_SIZE; i++) {
 			System.out.print(" " + i);
 		}
 		System.out.println();
-		for (int y = 0, x; y < Board.BOARD_SIZE; y++) {
+		for (int y = 0, x; y < OthelloBoard.BOARD_SIZE; y++) {
 			System.out.print(" " + y);
-			for (x = 0; x < Board.BOARD_SIZE; x++) {
+			for (x = 0; x < OthelloBoard.BOARD_SIZE; x++) {
 				switch (board.get(y).get(x)) {
 				case BLACK:
 					System.out.print("〇");
@@ -146,8 +152,8 @@ public class Board implements Cloneable {
 
 	/* 現在の盤面を複製した Boardクラス を返す */
 	@Override
-	public Board clone() {
-		Board copy = new Board();
+	public OthelloBoard clone() {
+		OthelloBoard copy = new OthelloBoard();
 		for (int y = 0; y < BOARD_SIZE; y++) {
 			for (int x = 0; x < BOARD_SIZE; x++) {
 				copy.board.get(y).set(x, this.board.get(y).get(x));
@@ -162,7 +168,11 @@ public class Board implements Cloneable {
 	}
 }
 
-class BoardGUI extends Board {
+/*
+ * GUI表示オセロボード
+ * */
+class BoardGUI extends OthelloBoard {
+	/* メンバ変数 */
 	static final int GRID_SIZE = 100;
 	private final Canvas canv = new Canvas();
 	private final Window FRAME;
@@ -171,7 +181,7 @@ class BoardGUI extends Board {
 	public BoardGUI() {
 		super();
 		// ウィンドウクラスの作成
-		FRAME = new Window("Osero", GRID_SIZE * Board.BOARD_SIZE, GRID_SIZE * Board.BOARD_SIZE);
+		FRAME = new Window("Osero", GRID_SIZE * OthelloBoard.BOARD_SIZE, GRID_SIZE * OthelloBoard.BOARD_SIZE);
 
 		FRAME.add(canv);
 		dispBoard();

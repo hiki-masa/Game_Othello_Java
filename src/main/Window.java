@@ -9,6 +9,9 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+/*
+ * ウィンド
+ * */
 public class Window extends JFrame {
 	/* コンストラクタ */
 	public Window(String _windowName, int _width, int _height) {
@@ -26,19 +29,23 @@ public class Window extends JFrame {
 	}
 }
 
-class Canvas extends JPanel{
+/*
+ * キャンバス
+ * */
+class Canvas extends JPanel {
+	/* メンバ変数 */
 	private Image EMPTY_IMG = Toolkit.getDefaultToolkit().getImage("src/EMPTY.png");
 	private Image BLACK_IMG = Toolkit.getDefaultToolkit().getImage("src/BLACK.png");
 	private Image WHITE_IMG = Toolkit.getDefaultToolkit().getImage("src/WHITE.png");
-	private Board board;
+	private OthelloBoard board;
 
-	// コンストラクタ
+	/* コンストラクタ */
 	public Canvas() {
-		;
+		board = null;
 	}
 
-	// セッター
-	public void setBoard(Board _board) {
+	/* セッター */
+	public void setBoard(OthelloBoard _board) {
 		board = _board;
 	}
 
@@ -46,27 +53,27 @@ class Canvas extends JPanel{
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		for (int y = 0; y < Board.BOARD_SIZE; y++) {
-			for (int x = 0; x < Board.BOARD_SIZE; x++) {
-				switch (board.getBoard().get(y).get(x)) {
-				case EMPTY:
-					g.drawImage(EMPTY_IMG, BoardGUI.GRID_SIZE * x, BoardGUI.GRID_SIZE * y,
-							BoardGUI.GRID_SIZE, BoardGUI.GRID_SIZE, this);
-					break;
-				case BLACK:
-					g.drawImage(BLACK_IMG, BoardGUI.GRID_SIZE * x, BoardGUI.GRID_SIZE * y,
-							BoardGUI.GRID_SIZE, BoardGUI.GRID_SIZE, this);
-					break;
-				case WHITE:
-					g.drawImage(WHITE_IMG, BoardGUI.GRID_SIZE * x, BoardGUI.GRID_SIZE * y,
-							BoardGUI.GRID_SIZE, BoardGUI.GRID_SIZE, this);
-					break;
+		try {
+			for (int y = 0; y < OthelloBoard.BOARD_SIZE; y++) {
+				for (int x = 0; x < OthelloBoard.BOARD_SIZE; x++) {
+					switch (board.getBoard().get(y).get(x)) {
+					case EMPTY:
+						g.drawImage(EMPTY_IMG, BoardGUI.GRID_SIZE * x, BoardGUI.GRID_SIZE * y,
+								BoardGUI.GRID_SIZE, BoardGUI.GRID_SIZE, this);
+						break;
+					case BLACK:
+						g.drawImage(BLACK_IMG, BoardGUI.GRID_SIZE * x, BoardGUI.GRID_SIZE * y,
+								BoardGUI.GRID_SIZE, BoardGUI.GRID_SIZE, this);
+						break;
+					case WHITE:
+						g.drawImage(WHITE_IMG, BoardGUI.GRID_SIZE * x, BoardGUI.GRID_SIZE * y,
+								BoardGUI.GRID_SIZE, BoardGUI.GRID_SIZE, this);
+						break;
+					}
 				}
 			}
+		} catch (NullPointerException e) {
+			System.out.println("表示するオセロボード（board）が設定されていません．");
 		}
-//		// 選択枠の表示
-//		g.setColor(Color.RED);
-//		g.drawRect(BoardGUI.GRID_SIZE * selectPos[0], BoardGUI.GRID_SIZE * selectPos[1],
-//				BoardGUI.GRID_SIZE, BoardGUI.GRID_SIZE);
 	}
 }

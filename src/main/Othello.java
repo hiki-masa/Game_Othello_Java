@@ -1,14 +1,16 @@
 package main;
 
-import main.OseroStone.Stone;
-
-class Osero {
-	private Board board;
+/*
+ * オセロ
+ * */
+class Othello implements OthelloStone {
+	/* メンバ変数 */
+	private OthelloBoard board;
 	private Player[] players = new Player[2];
 	private Stone playColor = Stone.BLACK;
 
 	/* コンストラクタ */
-	public Osero(Player player1, Player player2) {
+	public Othello(Player player1, Player player2) {
 		// ポリモフィズムを用いたボード・プレイヤー配列の作成
 		if (player1.color != player2.color) {
 			players[0] = player1;
@@ -23,7 +25,7 @@ class Osero {
 	/* ゲームループ */
 	public void game() {
 		board.dispBoard();
-		while (board.countStone(players[0].color) + board.countStone(players[1].color) != Board.BOARD_SIZE * Board.BOARD_SIZE) {
+		while (board.countStone(players[0].color) + board.countStone(players[1].color) != OthelloBoard.BOARD_SIZE * OthelloBoard.BOARD_SIZE) {
 			for (Player player : players) {
 				// 対象色のプレイヤーがプレイ
 				if (player.color == playColor) {
@@ -33,7 +35,7 @@ class Osero {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
 					}
-					playColor = OseroStone.reverseStone(playColor);
+					playColor = OthelloStone.reverseStone(playColor);
 					break;
 				}
 			}
@@ -48,5 +50,14 @@ class Osero {
 
 		System.out.print(players[1].color);
 		System.out.println("：" + board.countStone(players[1].color));
+
+		// 勝敗の表示
+		if (board.countStone(players[0].color) > board.countStone(players[1].color)) {
+			System.out.println(players[0].color + "の勝利");
+		} else if (board.countStone(players[0].color) < board.countStone(players[1].color)) {
+			System.out.println(players[1].color + "の勝利");
+		} else {
+			System.out.println("引き分け");
+		}
 	}
 }

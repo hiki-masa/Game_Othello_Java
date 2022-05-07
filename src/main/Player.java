@@ -4,20 +4,22 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
-import main.OseroStone.Stone;
-
-/* プレイヤー抽象クラス */
-abstract class Player {
+/* 
+ * プレイヤー抽象クラス 
+ * */
+abstract class Player implements OthelloStone {
+	/* メンバ変数 */
 	Stone color;
 	protected ArrayList<int[]> methods = new ArrayList<int[]>();
 
-	protected abstract void play(Board _board);
+	/* プレイヤーごとに石の設置方法を変更するための抽象メソッド */
+	protected abstract void play(OthelloBoard _board);
 
 	/* 石を置ける場所を探す */
-	protected void searchCanPut(Board _board) {
+	protected void searchCanPut(OthelloBoard _board) {
 		methods.clear();
-		for (int y = 0; y < Board.BOARD_SIZE; y++) {
-			for (int x = 0; x < Board.BOARD_SIZE; x++) {
+		for (int y = 0; y < OthelloBoard.BOARD_SIZE; y++) {
+			for (int x = 0; x < OthelloBoard.BOARD_SIZE; x++) {
 				if (_board.canPut(x, y, color)) {
 					int[] placeCanPut = { x, y };
 					methods.add(placeCanPut);
@@ -27,14 +29,18 @@ abstract class Player {
 	}
 }
 
-/* 具象クラス（コンピュータプレイヤー） */
+/* 
+ * コンピュータプレイヤー
+ *  */
 class Computer extends Player {
+	/* コンストラクタ */
 	public Computer(Stone _color) {
 		color = _color;
 	}
 
+	/* 石の設置 */
 	@Override
-	public void play(Board _board) {
+	public void play(OthelloBoard _board) {
 		// 設置できる場所を探す
 		searchCanPut(_board);
 		if (methods.size() == 0) {
@@ -47,17 +53,20 @@ class Computer extends Player {
 	}
 }
 
-/* 具象クラス（人間プレイヤー） */
+/* 人間プレイヤー */
 class Human extends Player {
+	/* メンバ変数 */
 	Scanner scanner;
-	
+
+	/* コンストラクタ */
 	public Human(Stone _color) {
 		color = _color;
 		scanner = new Scanner(System.in);
 	}
 
+	/* 石の設置 */
 	@Override
-	public void play(Board _board) {
+	public void play(OthelloBoard _board) {
 		searchCanPut(_board);
 		if (methods.size() == 0) {
 			System.out.println("(" + color + ")：置ける場所がないので，パスします");
@@ -74,7 +83,6 @@ class Human extends Player {
 				System.out.print("設置するy座標を入力してください：");
 				inputY = scanner.nextInt();
 			} while (!_board.canPut(inputX, inputY, color));
-			//scanner.close();
 			// 指定された場所に石を設置
 			_board.putStone(inputX, inputY, color);
 		}
