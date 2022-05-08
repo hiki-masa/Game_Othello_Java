@@ -161,7 +161,7 @@ public class OthelloBoard implements OthelloStone, Cloneable {
 		}
 		return copy;
 	}
-	
+
 	/* ゲッター */
 	public ArrayList<ArrayList<Stone>> getBoard() {
 		return this.clone().board;
@@ -171,27 +171,26 @@ public class OthelloBoard implements OthelloStone, Cloneable {
 /*
  * GUI表示オセロボード
  * */
-class BoardGUI extends OthelloBoard {
+class OthelloBoardGUI extends OthelloBoard {
 	/* メンバ変数 */
 	static final int GRID_SIZE = 100;
-	private final Canvas canv = new Canvas();
+	private final GamePanel gamePanel = new GamePanel();
 	private final Window FRAME;
 
 	/* コンストラクタ */
-	public BoardGUI() {
+	public OthelloBoardGUI() {
 		super();
 		// ウィンドウクラスの作成
 		FRAME = new Window("Osero", GRID_SIZE * OthelloBoard.BOARD_SIZE, GRID_SIZE * OthelloBoard.BOARD_SIZE);
 
-		FRAME.add(canv);
+		FRAME.add(gamePanel);
 		dispBoard();
-		FRAME.setVisible(true);
 	}
 
 	/* Canvasを用いたGUI表示 */
 	@Override
 	public void dispBoard() {
-		canv.setBoard(this.clone());
+		gamePanel.setBoard(this.clone());
 		FRAME.repaint();
 	}
 }

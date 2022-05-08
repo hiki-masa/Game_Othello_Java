@@ -53,7 +53,9 @@ class Computer extends Player {
 	}
 }
 
-/* 人間プレイヤー */
+/* 
+ * 人間プレイヤー 
+ * */
 class Human extends Player {
 	/* メンバ変数 */
 	Scanner scanner;

@@ -1,38 +1,36 @@
 package main;
 
-import java.awt.Color;
-import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 /*
- * ウィンド
+ * ウィンドウ
  * */
 public class Window extends JFrame {
 	/* コンストラクタ */
 	public Window(String _windowName, int _width, int _height) {
 		// Windowの設定
 		setTitle(_windowName);
+		this.setIconImage(new ImageIcon("src/BLACK.png").getImage());
 		setSize(_width, _height);
 		setResizable(true);
 
 		// Windowの閉じるボタンを押せば，プログラムが終了する
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		// 背景色の設定
-		Container contentPane = getContentPane();
-		contentPane.setBackground(Color.GREEN);
+		this.setVisible(true);
 	}
 }
 
 /*
- * キャンバス
+ * パネル
  * */
-class Canvas extends JPanel {
+class GamePanel extends JPanel {
 	/* メンバ変数 */
 	private Image EMPTY_IMG = Toolkit.getDefaultToolkit().getImage("src/EMPTY.png");
 	private Image BLACK_IMG = Toolkit.getDefaultToolkit().getImage("src/BLACK.png");
@@ -40,7 +38,7 @@ class Canvas extends JPanel {
 	private OthelloBoard board;
 
 	/* コンストラクタ */
-	public Canvas() {
+	public GamePanel() {
 		board = null;
 	}
 
@@ -58,16 +56,16 @@ class Canvas extends JPanel {
 				for (int x = 0; x < OthelloBoard.BOARD_SIZE; x++) {
 					switch (board.getBoard().get(y).get(x)) {
 					case EMPTY:
-						g.drawImage(EMPTY_IMG, BoardGUI.GRID_SIZE * x, BoardGUI.GRID_SIZE * y,
-								BoardGUI.GRID_SIZE, BoardGUI.GRID_SIZE, this);
+						g.drawImage(EMPTY_IMG, OthelloBoardGUI.GRID_SIZE * x, OthelloBoardGUI.GRID_SIZE * y,
+								OthelloBoardGUI.GRID_SIZE, OthelloBoardGUI.GRID_SIZE, this);
 						break;
 					case BLACK:
-						g.drawImage(BLACK_IMG, BoardGUI.GRID_SIZE * x, BoardGUI.GRID_SIZE * y,
-								BoardGUI.GRID_SIZE, BoardGUI.GRID_SIZE, this);
+						g.drawImage(BLACK_IMG, OthelloBoardGUI.GRID_SIZE * x, OthelloBoardGUI.GRID_SIZE * y,
+								OthelloBoardGUI.GRID_SIZE, OthelloBoardGUI.GRID_SIZE, this);
 						break;
 					case WHITE:
-						g.drawImage(WHITE_IMG, BoardGUI.GRID_SIZE * x, BoardGUI.GRID_SIZE * y,
-								BoardGUI.GRID_SIZE, BoardGUI.GRID_SIZE, this);
+						g.drawImage(WHITE_IMG, OthelloBoardGUI.GRID_SIZE * x, OthelloBoardGUI.GRID_SIZE * y,
+								OthelloBoardGUI.GRID_SIZE, OthelloBoardGUI.GRID_SIZE, this);
 						break;
 					}
 				}

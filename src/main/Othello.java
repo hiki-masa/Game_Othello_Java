@@ -19,7 +19,7 @@ class Othello implements OthelloStone {
 			System.out.println("player1とplayer2の石の色が同じに設定されています．");
 			System.exit(0);
 		}
-		board = new BoardGUI();
+		board = new OthelloBoardGUI();
 	}
 
 	/* ゲームループ */
