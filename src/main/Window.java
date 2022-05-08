@@ -1,5 +1,7 @@
 package main;
 
+import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -9,44 +11,89 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 /*
+ * スクリーンの表示モード
+ * */
+enum ScreenMode {
+	GAME, RESULT,
+}
+
+/*
  * ウィンドウ
  * */
 public class Window extends JFrame {
+	/* メンバ変数 */
+	private ScreenMode screenMode;
+	CardLayout layout = new CardLayout();
+	private GamePanel gamePanel;
+	private ResultPanel resultPanel;
+
 	/* コンストラクタ */
-	public Window(String _windowName, int _width, int _height) {
+	public Window(String windowName, int windowWidth, int windowHeight) {
 		// Windowの設定
-		setTitle(_windowName);
+		setTitle(windowName);
 		this.setIconImage(new ImageIcon("src/BLACK.png").getImage());
-		setSize(_width, _height);
+		setSize(windowWidth, windowHeight);
 		setResizable(true);
 
 		// Windowの閉じるボタンを押せば，プログラムが終了する
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		this.setLayout(layout);
+		this.preparePanels();
+
 		this.setVisible(true);
+	}
+
+	/* パネルの準備 */
+	private void preparePanels() {
+		this.gamePanel = new GamePanel();
+		this.add(this.gamePanel, "ゲーム画面");
+		this.resultPanel = new ResultPanel();
+		this.add(this.resultPanel, "結果画面");
+	}
+
+	public void setFrontScreenAndFocus(ScreenMode s) {
+		screenMode = s;
+		switch (screenMode) {
+		case GAME:
+			layout.show(this.getContentPane(), "ゲーム画面");
+			this.gamePanel.requestFocus();
+			break;
+		case RESULT:
+			layout.show(this.getContentPane(), "結果画面");
+			this.resultPanel.requestFocus();
+			break;
+		}
+	}
+
+	/* ゲッター */
+	public GamePanel getGamePanel() {
+		return this.gamePanel;
 	}
 }
 
 /*
- * パネル
+ * ゲーム画面用パネル
  * */
 class GamePanel extends JPanel {
 	/* メンバ変数 */
 	private Image EMPTY_IMG = Toolkit.getDefaultToolkit().getImage("src/EMPTY.png");
 	private Image BLACK_IMG = Toolkit.getDefaultToolkit().getImage("src/BLACK.png");
 	private Image WHITE_IMG = Toolkit.getDefaultToolkit().getImage("src/WHITE.png");
-	private OthelloBoard board;
+	private OthelloBoard board = null;
 
 	/* コンストラクタ */
 	public GamePanel() {
-		board = null;
+		this.setLayout(null);
+		this.setBackground(Color.black);
 	}
 
 	/* セッター */
-	public void setBoard(OthelloBoard _board) {
-		board = _board;
+	public void setBoard(OthelloBoard board) {
+		this.board = board;
 	}
 
+	/* コンポーネントの描画 */
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -73,5 +120,16 @@ class GamePanel extends JPanel {
 		} catch (NullPointerException e) {
 			System.out.println("表示するオセロボード（board）が設定されていません．");
 		}
+	}
+}
+
+/*
+ * 結果画面用パネル
+ * */
+class ResultPanel extends JPanel {
+	/* コンストラクタ */
+	public ResultPanel() {
+		this.setLayout(null);
+		this.setBackground(Color.green);
 	}
 }

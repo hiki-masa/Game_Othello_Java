@@ -45,19 +45,6 @@ class Othello implements OthelloStone {
 
 	/* 結果表示 */
 	private void result() {
-		System.out.print(players[0].color);
-		System.out.println("：" + board.countStone(players[0].color));
-
-		System.out.print(players[1].color);
-		System.out.println("：" + board.countStone(players[1].color));
-
-		// 勝敗の表示
-		if (board.countStone(players[0].color) > board.countStone(players[1].color)) {
-			System.out.println(players[0].color + "の勝利");
-		} else if (board.countStone(players[0].color) < board.countStone(players[1].color)) {
-			System.out.println(players[1].color + "の勝利");
-		} else {
-			System.out.println("引き分け");
-		}
+		board.dispResult();
 	}
 }
