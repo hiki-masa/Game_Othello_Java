@@ -121,24 +121,6 @@ public class OthelloBoard implements OthelloStone, Cloneable {
 		return count;
 	}
 
-	/* 結果画面の表示 */
-	public void dispResult() {
-		System.out.print(Stone.BLACK);
-		System.out.println("：" + countStone(Stone.BLACK));
-
-		System.out.print(Stone.WHITE);
-		System.out.println("：" + countStone(Stone.WHITE));
-
-		// 勝敗の表示
-		if (countStone(Stone.BLACK) > countStone(Stone.WHITE)) {
-			System.out.println(Stone.BLACK + "の勝利");
-		} else if (countStone(Stone.BLACK) < countStone(Stone.WHITE)) {
-			System.out.println(Stone.WHITE + "の勝利");
-		} else {
-			System.out.println("引き分け");
-		}
-	}
-
 	/* CUI表示 */
 	public void dispBoard() {
 		System.out.print("  ");
@@ -183,37 +165,5 @@ public class OthelloBoard implements OthelloStone, Cloneable {
 	/* ゲッター */
 	public ArrayList<ArrayList<Stone>> getBoard() {
 		return this.clone().board;
-	}
-}
-
-/*
- * GUI表示オセロボード
- * */
-class OthelloBoardGUI extends OthelloBoard {
-	/* メンバ変数 */
-	static final int GRID_SIZE = 100;
-	private final Window FRAME;
-
-	/* コンストラクタ */
-	public OthelloBoardGUI() {
-		super();
-		// ウィンドウクラスの作成
-		FRAME = new Window("Osero", GRID_SIZE * OthelloBoard.BOARD_SIZE, GRID_SIZE * OthelloBoard.BOARD_SIZE);
-	}
-
-	/* Canvasを用いたGUI表示 */
-	@Override
-	public void dispBoard() {
-		FRAME.setFrontScreenAndFocus(ScreenMode.GAME);
-		FRAME.getGamePanel().setBoard(this.clone());
-		FRAME.repaint();
-	}
-
-	/* 結果画面の表示 */
-	@Override
-	public void dispResult() {
-		super.dispBoard();
-		super.dispResult();
-		FRAME.setFrontScreenAndFocus(ScreenMode.RESULT);
 	}
 }

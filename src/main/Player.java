@@ -11,6 +11,7 @@ abstract class Player implements OthelloStone {
 	/* メンバ変数 */
 	Stone color;
 	protected ArrayList<int[]> methods = new ArrayList<int[]>();
+	protected int pointX, pointY;
 
 	/* プレイヤーごとに石の設置方法を変更するための抽象メソッド */
 	protected abstract void play(OthelloBoard _board);
@@ -48,7 +49,9 @@ class Computer extends Player {
 		} else {
 			Random random = new Random();
 			int[] method = methods.get(random.nextInt(methods.size()));
-			_board.putStone(method[0], method[1], color);
+			pointX = method[0];
+			pointY = method[1];
+			_board.putStone(pointX, pointY, color);
 		}
 	}
 }
