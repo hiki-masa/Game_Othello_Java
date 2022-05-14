@@ -7,12 +7,12 @@ class Othello implements OthelloStone {
 	/* メンバ変数 */
 	private OthelloBoard othelloBoard;
 	private Player[] players = new Player[2];
-	private Stone playColor = Stone.BLACK;
+	protected Stone playColor = Stone.BLACK;
 
 	/* コンストラクタ */
 	public Othello(Player player1, Player player2) {
 		// ポリモフィズムを用いたボード・プレイヤー配列の作成
-		if (player1.color != player2.color) {
+		if (player1.stoneColor != player2.stoneColor) {
 			players[0] = player1;
 			players[1] = player2;
 		} else {
@@ -26,9 +26,10 @@ class Othello implements OthelloStone {
 	public void game() {
 		for (Player player : players) {
 			// 対象色のプレイヤーがプレイ
-			if (player.color == playColor) {
-				player.play(othelloBoard);
-				playColor = OthelloStone.reverseStone(playColor);
+			if (player.stoneColor == playColor) {
+				// 正しくプレイすることが出来たか判定
+				if(player.play(othelloBoard))
+					playColor = OthelloStone.reverseStone(playColor);
 				break;
 			}
 		}
@@ -39,7 +40,7 @@ class Othello implements OthelloStone {
 		return othelloBoard;
 	}
 	
-	public Player getPlayer(int number) {
-		return  players[number];
+	public Player[] getPlayers() {
+		return  players;
 	}
 }
