@@ -14,7 +14,7 @@ abstract class Player implements OthelloStone {
 	protected ArrayList<Pointer> canPutLocations = new ArrayList<>();
 	protected Pointer putLocation = new Pointer();
 	protected Color pointerColor;
-	
+
 	/* コンストラクタ */
 	protected Player(Stone stoneColor, Color pointerColor) {
 		this.stoneColor = stoneColor;
@@ -35,15 +35,15 @@ abstract class Player implements OthelloStone {
 			}
 		}
 	}
-	
-	protected class Pointer{
+
+	protected class Pointer {
 		public int x, y;
-		
+
 		public Pointer() {
 			x = 0;
 			y = 0;
 		}
-		
+
 		public Pointer(int x, int y) {
 			this.x = x;
 			this.y = y;
@@ -57,7 +57,7 @@ abstract class Player implements OthelloStone {
 class Computer extends Player {
 	/* メンバ変数 */
 	private Random random;
-	
+
 	/* コンストラクタ */
 	public Computer(Stone stoneColor) {
 		super(stoneColor, Color.blue);
@@ -121,7 +121,6 @@ class Human extends Player {
  * 人間プレイヤー 
  * */
 class HumanGUI extends Human {
-
 	/* コンストラクタ */
 	public HumanGUI(Stone stoneColor) {
 		super(stoneColor);
@@ -138,9 +137,9 @@ class HumanGUI extends Human {
 			int counter = othelloBoard.countStone(stoneColor);
 			// 指定された場所に石を設置
 			othelloBoard.putStone(putLocation.x, putLocation.y, stoneColor);
-			if(counter == othelloBoard.countStone(stoneColor)) {
+			if (counter == othelloBoard.countStone(stoneColor)) {
 				return false;
-			}else {
+			} else {
 				return true;
 			}
 		}

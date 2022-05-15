@@ -28,7 +28,7 @@ class Othello implements OthelloStone {
 			// 対象色のプレイヤーがプレイ
 			if (player.stoneColor == playColor) {
 				// 正しくプレイすることが出来たか判定
-				if(player.play(othelloBoard))
+				if (player.play(othelloBoard))
 					playColor = OthelloStone.reverseStone(playColor);
 				break;
 			}
@@ -39,8 +39,8 @@ class Othello implements OthelloStone {
 	public OthelloBoard getOthelloBoard() {
 		return othelloBoard;
 	}
-	
+
 	public Player[] getPlayers() {
-		return  players;
+		return players;
 	}
 }

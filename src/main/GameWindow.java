@@ -46,9 +46,6 @@ public class GameWindow extends JFrame {
 
 		// パネルの準備
 		this.setLayout(layout);
-
-		// ウィンドウ表示
-		this.setVisible(true);
 	}
 
 	/* パネルの準備 */
@@ -91,14 +88,21 @@ public class GameWindow extends JFrame {
 }
 
 /*
- * ゲーム画面用パネル
+ * オセロ用パネル
  * */
-class GamePanel extends JPanel {
+class OthelloPanel extends JPanel {
 	/* メンバ変数 */
 	static final int GRID_SIZE = 100;
-	private Image EMPTY_IMG = Toolkit.getDefaultToolkit().getImage("src/EMPTY.png");
-	private Image BLACK_IMG = Toolkit.getDefaultToolkit().getImage("src/BLACK.png");
-	private Image WHITE_IMG = Toolkit.getDefaultToolkit().getImage("src/WHITE.png");
+	protected Image EMPTY_IMG = Toolkit.getDefaultToolkit().getImage("src/EMPTY.png");
+	protected Image BLACK_IMG = Toolkit.getDefaultToolkit().getImage("src/BLACK.png");
+	protected Image WHITE_IMG = Toolkit.getDefaultToolkit().getImage("src/WHITE.png");
+}
+
+/*
+ * ゲーム画面用パネル
+ * */
+class GamePanel extends OthelloPanel {
+	/* メンバ変数 */
 	protected Othello othello = null;
 	protected GameKeyListener gameKeyListener;
 
@@ -138,7 +142,7 @@ class GamePanel extends JPanel {
 		BasicStroke bs = new BasicStroke(5);
 		g2.setStroke(bs);
 		// 設置箇所の表示
-		for(Player player : othello.getPlayers()) {
+		for (Player player : othello.getPlayers()) {
 			g.setColor(player.pointerColor);
 			g.drawRect(GRID_SIZE * player.putLocation.x, GRID_SIZE * player.putLocation.y, GRID_SIZE, GRID_SIZE);
 		}
@@ -176,7 +180,7 @@ class GamePanel extends JPanel {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			for (Player player : othello.getPlayers()) {
-				if(player.stoneColor == othello.playColor) {
+				if (player.stoneColor == othello.playColor) {
 					switch (e.getKeyCode()) {
 					case (KeyEvent.VK_UP):
 						if (player.putLocation.y > 0)
@@ -217,22 +221,27 @@ class GamePanel extends JPanel {
 /*
  * 結果画面用パネル
  * */
-class ResultPanel extends JPanel {
+class ResultPanel extends OthelloPanel {
 	/* メンバ変数 */
-	ResultKeyListener resultKeyListener;
-	
+	protected ResultKeyListener resultKeyListener;
+	private int blackStoneNumber, whiteStoneNumber;
+
 	/* コンストラクタ */
 	public ResultPanel() {
 		this.setLayout(null);
 		this.setBackground(Color.green);
 	}
-	
+
 	/* コンポーネントの準備 */
 	public void prepareComponent() {
 		resultKeyListener = new ResultKeyListener(this);
 	}
 
-	public void paint(int blackStoneNumber, int whiteStoneNumber) {
+	/* 結果の描画 */
+	public void dispResult(int blackStoneNumber, int whiteStoneNumber) {
+		this.blackStoneNumber = blackStoneNumber;
+		this.whiteStoneNumber = whiteStoneNumber;
+
 		System.out.println(Stone.BLACK + "：" + blackStoneNumber);
 		System.out.println(Stone.WHITE + "：" + whiteStoneNumber);
 
@@ -243,13 +252,33 @@ class ResultPanel extends JPanel {
 		} else {
 			System.out.println("引き分け");
 		}
+
+		repaint();
 	}
 
+	/* コンポーネントの描画 */
 	@Override
 	public void paintComponent(Graphics g) {
-
+		for (int i = 0; i < Math.max(blackStoneNumber, whiteStoneNumber); i++) {
+			// 行によって表示の仕方を変化させる
+			if ((i / 8) % 2 == 0) {
+				if (i < blackStoneNumber) {
+					g.drawImage(BLACK_IMG, GRID_SIZE * (i % 8), GRID_SIZE * (i / 8), GRID_SIZE, GRID_SIZE, this);
+				}
+				if (i < whiteStoneNumber) {
+					g.drawImage(WHITE_IMG, GRID_SIZE * (i % 8), GRID_SIZE * (7 - (i / 8)), GRID_SIZE, GRID_SIZE, this);
+				}
+			} else {
+				if (i < blackStoneNumber) {
+					g.drawImage(BLACK_IMG, GRID_SIZE * (7 - (i % 8)), GRID_SIZE * (i / 8), GRID_SIZE, GRID_SIZE, this);
+				}
+				if (i < whiteStoneNumber) {
+					g.drawImage(WHITE_IMG, GRID_SIZE * (7 - (i % 8)), GRID_SIZE * (7 - (i / 8)), GRID_SIZE, GRID_SIZE, this);
+				}
+			}
+		}
 	}
-	
+
 	/* キーリスナー */
 	private class ResultKeyListener implements KeyListener {
 		/* コンストラクタ */
